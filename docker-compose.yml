@@ -14,6 +14,24 @@ services:
     networks:
       - brady
 
+
+  mysql:
+    image: mysql:8.0
+    hostname: mysql8
+    container_name: docker_mysql
+    volumes:
+      - ./mysql/conf/my.cnf:/etc/my.cnf:rw
+      - ./mysql/logs:/logs:rw
+      - ./mysql/data:/var/lib/mysql:rw
+    ports:
+      - 3306:3306
+    environment:
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "MYSQL_DATABASE=test"
+      - "TZ=Asia/Shanghai"
+    networks:
+      - brady
+
 networks:
   brady:
     driver: bridge
