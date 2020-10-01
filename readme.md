@@ -1,5 +1,6 @@
-# 各种服务一键启动
+# 各种服务
 
+## 安装
 git clone git@github.com:brady-wang/service.git 
 
 cd service  
@@ -8,6 +9,11 @@ docker-composer up 启动
 docker-compose up -d 后台启动
 docker-composer down 删除
 docker-composer restart 重启
+
+## 配置文件 
+.env  
+docker-compose.yml
+不需要的服务注释 
 
 ## rabbitmq
 
@@ -25,7 +31,7 @@ docker-composer restart 重启
 ## mysql8 
 
 1 用户名密码
-root  root
+root  123456
 
 2 授权远程登录 
 
@@ -38,3 +44,5 @@ create user 'brady'@'%' identified by 'brady';
 GRANT ALL PRIVILEGES ON *.* TO 'brady'@'%';
 ALTER USER 'brady'@'%' IDENTIFIED WITH mysql_native_password BY 'brady';
 FLUSH PRIVILEGES;
+
+3 改变了版本后 要删除data目录下mysql原来得数据 
