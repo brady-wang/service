@@ -48,6 +48,20 @@ services:
     networks:
       - brady
 
+  es:
+    image: elasticsearch:7.9.2
+    hostname: es
+    container_name: docker-es
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - "discovery.type=single-node"
+    networks:
+      - brady
+
+  
+
 networks:
   brady:
     driver: bridge
