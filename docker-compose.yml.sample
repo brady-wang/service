@@ -19,6 +19,37 @@ services:
     networks:
       - default
 
+
+  nginx:
+    image: nginx:1.19.2
+    hostname: nginx
+    container_name: docker-nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./logs/nginx:/var/log/nginx
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./conf/nginx/conf.d:/etc/nginx/conf.d
+      - ./www:/usr/share/nginx/html
+    environment:
+      - "TZ=${TZ}"
+    links:
+      - php-fpm
+    networks:
+      - default
+
+  php-fpm:
+    image: php:7.2-fpm
+    hostname: nginx
+    container_name: docker-php-fpm
+    volumes:
+      - ./www:/www
+    environment:
+      - "TZ=${TZ}"
+    networks:
+      - default
+
   mysql:
     image: mysql:${MYSQL_VERSION}
     hostname: mysql
@@ -55,9 +86,6 @@ services:
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     hostname: es
     container_name: docker-es
-#    volumes:
-#      - ${DATA_DIR}/elasticsearch:/usr/share/elasticsearch/data
-#      - ${ELASTICSEARCH_CONF_FILE}:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - ${ELASTICSEARCH_HOST_PORT_A}:9200
       - ${ELASTICSEARCH_HOST_PORT_B}:9300

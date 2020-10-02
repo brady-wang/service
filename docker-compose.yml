@@ -1,68 +1,55 @@
 version: '3'
 services:
 
-  redis:
-    image: redis:${REDIS_VERSION}
-    hostname: redis
-    container_name: docker-redis
-    volumes:
-      - ${DATA_DIR}/redis:/data:rw
-      - ${REDIS_CONF_FILE}:/etc/redis/redis.conf:rw
-    command:
-      redis-server /etc/redis/redis.conf --appendonly yes
+#  redis:
+#    image: redis:${REDIS_VERSION}
+#    hostname: redis
+#    container_name: docker-redis
+#    volumes:
+#      - ${DATA_DIR}/redis:/data:rw
+#      - ${REDIS_CONF_FILE}:/etc/redis/redis.conf:rw
+#    command:
+#      redis-server /etc/redis/redis.conf --appendonly yes
+#    ports:
+#      - ${REDIS_HOST_PORT}:6379
+#    extra_hosts:
+#      - "somehost:162.242.195.82"
+#    environment:
+#      - "TZ=${TZ}"
+#    networks:
+#      - default
+
+  nginx:
+    image: nginx:1.19.2
+    hostname: nginx
+    container_name: docker-nginx
     ports:
-      - ${REDIS_HOST_PORT}:6379
-    extra_hosts:
-      - "somehost:162.242.195.82"
+      - 80:80
+      - 443:443
+    volumes:
+      - ./logs/nginx:/var/log/nginx
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./conf/nginx/conf.d:/etc/nginx/conf.d
+      - ./www:/usr/share/nginx/html
     environment:
       - "TZ=${TZ}"
+    links:
+      - php-fpm
     networks:
       - default
 
-  mysql:
-    image: mysql:${MYSQL_VERSION}
-    hostname: mysql
-    container_name: docker-mysql
+  php-fpm:
+    image: php:7.2-fpm
+    hostname: nginx
+    container_name: docker-php-fpm
     volumes:
-      - ${MYSQL_CONF_FILE}:/etc/my.cnf:rw
-      - ${MYSQL_LOGS_FILE}/mysql:/logs:rw
-      - ${DATA_DIR}/mysql:/var/lib/mysql:rw
-    ports:
-      - "${MYSQL_HOST_PORT}:3306"
+      - ./www:/www
     environment:
-      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
       - "TZ=${TZ}"
-    networks:
-      - default
-
-  rabbitmq:
-    image: rabbitmq:${RABBITMQ_VERSION}
-    hostname: rabbitmq
-    container_name: docker-rabbitmq
-    volumes:
-      - ${DATA_DIR}/rabbitmq:/var/lib/rabbitmq
-    ports:
-      - ${RABBITMQ_HOST_PORT_A}:5672
-      - ${RABBITMQ_HOST_PORT_B}:15672
-    environment:
-      - "RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}"
-      - "RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}"
-      - "RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}"
-    networks:
-      - default
-
-  elasticsearch:
-    image: elasticsearch:${ELASTICSEARCH_VERSION}
-    hostname: es
-    container_name: docker-es
-    ports:
-      - ${ELASTICSEARCH_HOST_PORT_A}:9200
-      - ${ELASTICSEARCH_HOST_PORT_B}:9300
-    environment:
-      - "discovery.type=single-node"
     networks:
       - default
 
 networks:
   default:
     driver: bridge
+
