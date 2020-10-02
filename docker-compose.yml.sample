@@ -28,10 +28,10 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./logs/nginx:/var/log/nginx
-      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./conf/nginx/conf.d:/etc/nginx/conf.d
-      - ./www:/usr/share/nginx/html
+      - ./logs/nginx:/var/log/nginx:rw
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:rw
+      - ./conf/nginx/conf.d:/etc/nginx/conf.d:rw
+      - ./www:/usr/share/nginx/html:rw
     environment:
       - "TZ=${TZ}"
     links:
@@ -44,7 +44,8 @@ services:
     hostname: nginx
     container_name: docker-php-fpm
     volumes:
-      - ./www:/www
+      - ./www:/www:rw
+      - ./conf/php:/usr/local/etc/php:rw
     environment:
       - "TZ=${TZ}"
     networks:
