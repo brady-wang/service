@@ -19,38 +19,6 @@ services:
     networks:
       - default
 
-
-  nginx:
-    image: nginx:1.19.2
-    hostname: nginx
-    container_name: docker-nginx
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./logs/nginx:/var/log/nginx:rw
-      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:rw
-      - ./conf/nginx/conf.d:/etc/nginx/conf.d:rw
-      - ./www:/usr/share/nginx/html:rw
-    environment:
-      - "TZ=${TZ}"
-    links:
-      - php-fpm
-    networks:
-      - default
-
-  php-fpm:
-    image: php:7.2-fpm
-    hostname: nginx
-    container_name: docker-php-fpm
-    volumes:
-      - ./www:/www:rw
-      - ./conf/php:/usr/local/etc/php:rw
-    environment:
-      - "TZ=${TZ}"
-    networks:
-      - default
-
   mysql:
     image: mysql:${MYSQL_VERSION}
     hostname: mysql
@@ -82,19 +50,6 @@ services:
       - "RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}"
     networks:
       - default
-
-  elasticsearch:
-    image: elasticsearch:${ELASTICSEARCH_VERSION}
-    hostname: es
-    container_name: docker-es
-    ports:
-      - ${ELASTICSEARCH_HOST_PORT_A}:9200
-      - ${ELASTICSEARCH_HOST_PORT_B}:9300
-    environment:
-      - "discovery.type=single-node"
-    networks:
-      - default
-
 networks:
   default:
     driver: bridge
