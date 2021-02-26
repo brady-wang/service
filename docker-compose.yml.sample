@@ -105,7 +105,7 @@ services:
         - "7001:7001"
       user: root
       volumes:
-        - "{DATA_DIR}/etcd:/opt/bitnami/etcd/data"
+        - ${DATA_DIR}/etcd:/opt/bitnami/etcd/data
       environment:
         - "ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379"
         - "ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379"
