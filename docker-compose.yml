@@ -1,10 +1,11 @@
-version: '3'
+version: '3.5'
 services:
 
   redis:
     image: redis:${REDIS_VERSION}
     hostname: redis
     container_name: docker-redis
+    restart: always
     volumes:
       - ${DATA_DIR}/redis:/data:rw
       - ${REDIS_CONF_FILE}:/etc/redis/redis.conf:rw
@@ -19,6 +20,33 @@ services:
     networks:
       - default
 
+  mongo:
+    container_name: docker-mongo
+    image: mongo:${MONGODB_VERSION}
+    restart: always
+    privileged: true
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD}
+      TZ: ${TZ}
+    volumes:
+      - ${DATA_DIR}:/data/db
+    ports:
+      - "${MONGODB_HOST_PORT}:27017"
+    networks:
+      - default
+
+#  adminmongo:
+#    image: mrvautin/adminmongo
+#    container_name: docker-adminmongo
+#    ports:
+#      - "${ADMINMONGO_HOST_PORT}:1234"
+#    environment:
+#      - HOST=0.0.0.0
+#      - DB_HOST=mongodb
+#      - DB_PORT=27017
+#    networks:
+#      - default
 
 
   mysql:
@@ -41,6 +69,7 @@ services:
     image: rabbitmq:${RABBITMQ_VERSION}
     hostname: rabbitmq
     container_name: docker-rabbitmq
+    restart: always
     volumes:
       - ${DATA_DIR}/rabbitmq:/var/lib/rabbitmq
     ports:
@@ -56,6 +85,8 @@ services:
   etcd:
       hostname: etcd
       image: bitnami/etcd:3
+      container_name: docker-etcd
+      restart: always
       ports:
         - "2379:2379"
         - "2380:2380"

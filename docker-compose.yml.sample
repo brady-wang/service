@@ -5,6 +5,7 @@ services:
     image: redis:${REDIS_VERSION}
     hostname: redis
     container_name: docker-redis
+    restart: always
     volumes:
       - ${DATA_DIR}/redis:/data:rw
       - ${REDIS_CONF_FILE}:/etc/redis/redis.conf:rw
@@ -24,6 +25,7 @@ services:
     image: nginx:1.19.2
     hostname: nginx
     container_name: docker-nginx
+    restart: always
     ports:
       - 80:80
       - 443:443
@@ -55,6 +57,7 @@ services:
     image: mysql:${MYSQL_VERSION}
     hostname: mysql
     container_name: docker-mysql
+    restart: always
     volumes:
       - ${MYSQL_CONF_FILE}:/etc/my.cnf:rw
       - ${MYSQL_LOGS_FILE}/mysql:/logs:rw
@@ -71,6 +74,7 @@ services:
     image: rabbitmq:${RABBITMQ_VERSION}
     hostname: rabbitmq
     container_name: docker-rabbitmq
+    restart: always
     volumes:
       - ${DATA_DIR}/rabbitmq:/var/lib/rabbitmq
     ports:
@@ -87,6 +91,7 @@ services:
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     hostname: es
     container_name: docker-es
+    restart: always
     ports:
       - ${ELASTICSEARCH_HOST_PORT_A}:9200
       - ${ELASTICSEARCH_HOST_PORT_B}:9300
@@ -98,6 +103,7 @@ services:
   etcd:
       hostname: etcd
       image: bitnami/etcd:3
+      restart: always
       ports:
         - "2379:2379"
         - "2380:2380"
@@ -117,6 +123,35 @@ services:
         - "ETCD_DATA_DIR=/opt/bitnami/etcd/data"
       networks:
         - default
+
+  mongo:
+    container_name: docker-mongo
+    image: mongo:${MONGODB_VERSION}
+    restart: always
+    privileged: true
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD}
+      TZ: ${TZ}
+    volumes:
+      - ${DATA_DIR}:/data/db
+    ports:
+      - "${MONGODB_HOST_PORT}:27017"
+    networks:
+      - default
+
+  adminmongo:
+    image: mrvautin/adminmongo
+    container_name: docker-adminmongo
+    restart: always
+    ports:
+      - "${ADMINMONGO_HOST_PORT}:1234"
+    environment:
+      - HOST=0.0.0.0
+      - DB_HOST=mongodb
+      - DB_PORT=27017
+    networks:
+      - default
 
 networks:
   default:
