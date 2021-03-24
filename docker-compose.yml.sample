@@ -153,6 +153,18 @@ services:
     networks:
       - default
 
+  eureka:
+    container_name: docker-eureka
+    image: sovandocker/eureka-server:2.0.0
+    restart: always
+    privileged: true
+    environment:
+      TZ: ${TZ}
+    ports:
+      - "8761:8761"
+    networks:
+      - default
+
 networks:
   default:
     driver: bridge

@@ -40,3 +40,4 @@ services:
       - byfn
 networks:
   byfn:
+    driver: bridge
