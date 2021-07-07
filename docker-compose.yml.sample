@@ -124,6 +124,36 @@ services:
       networks:
         - default
 
+  zookeeper:
+    container_name: docker-zookeeper
+    image: wurstmeister/zookeeper
+    restart: always
+    privileged: true
+    environment:
+      TZ: ${TZ}
+    ports:
+      - "2181:2181"
+    networks:
+      - default
+
+  kafka:
+    container_name: docker-kafka
+    image: wurstmeister/kafka
+    restart: always
+    privileged: true
+    environment:
+      TZ: ${TZ}
+      KAFKA_BROKER_ID: 0
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.33.10:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+    links:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    networks:
+      - default
+
   mongo:
     container_name: docker-mongo
     image: mongo:${MONGODB_VERSION}
