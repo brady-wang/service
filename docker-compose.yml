@@ -39,21 +39,21 @@ services:
     networks:
       - default
 
-  mongo:
-    container_name: docker-mongo
-    image: mongo:${MONGODB_VERSION}
-    restart: always
-    privileged: true
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD}
-      TZ: ${TZ}
-    volumes:
-      - ${DATA_DIR}/mongo:/data/db
-    ports:
-      - "${MONGODB_HOST_PORT}:27017"
-    networks:
-      - default
+#  mongo:
+#    container_name: docker-mongo
+#    image: mongo:${MONGODB_VERSION}
+#    restart: always
+#    privileged: true
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME}
+#      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD}
+#      TZ: ${TZ}
+#    volumes:
+#      - ${DATA_DIR}/mongo:/data/db
+#    ports:
+#      - "${MONGODB_HOST_PORT}:27017"
+#    networks:
+#      - default
 
 #  adminmongo:
 #    image: mrvautin/adminmongo
