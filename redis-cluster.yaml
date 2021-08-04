@@ -1,0 +1,22 @@
+version: "3.5"
+
+services:
+  redis-cluster:
+    image: grokzen/redis-cluster:latest
+    hostname: docker-redis-cluster
+    restart: always
+    environment:
+      - "IP=0.0.0.0"
+    ports:
+      - 7000:7000
+      - 7006:7001
+      - 7002:7002
+      - 7003:7003
+      - 7004:7004
+      - 7005:7005
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge

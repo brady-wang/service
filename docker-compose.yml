@@ -14,8 +14,27 @@ services:
     ports:
       - ${REDIS_HOST_PORT}:6379
     extra_hosts:
-      - "somehost:162.242.195.82"
+      - "host:162.242.195.82"
     environment:
+      - "TZ=${TZ}"
+    networks:
+      - default
+
+
+
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    hostname: mysql
+    container_name: docker-mysql
+    restart: always
+    volumes:
+      - ${MYSQL_CONF_FILE}:/etc/my.cnf:rw
+      - ${MYSQL_LOGS_FILE}/mysql:/logs:rw
+      - ${DATA_DIR}/mysql:/var/lib/mysql:rw
+    ports:
+      - "${MYSQL_HOST_PORT}:3306"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
       - "TZ=${TZ}"
     networks:
       - default
@@ -30,7 +49,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD}
       TZ: ${TZ}
     volumes:
-      - ${DATA_DIR}:/data/db
+      - ${DATA_DIR}/mongo:/data/db
     ports:
       - "${MONGODB_HOST_PORT}:27017"
     networks:
@@ -60,21 +79,6 @@ services:
     networks:
       - default
 
-  mysql:
-    image: mysql:${MYSQL_VERSION}
-    hostname: mysql
-    container_name: docker-mysql
-    volumes:
-      - ${MYSQL_CONF_FILE}:/etc/my.cnf:rw
-      - ${MYSQL_LOGS_FILE}/mysql:/logs:rw
-      - ${DATA_DIR}/mysql:/var/lib/mysql:rw
-    ports:
-      - "${MYSQL_HOST_PORT}:3306"
-    environment:
-      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
-      - "TZ=${TZ}"
-    networks:
-      - default
 
   rabbitmq:
     image: rabbitmq:${RABBITMQ_VERSION}
@@ -93,6 +97,21 @@ services:
     networks:
       - default
 
+  redis-cluster:
+    image: grokzen/redis-cluster:latest
+    hostname: docker-redis-cluster
+    restart: always
+    environment:
+      - "IP=0.0.0.0"
+    ports:
+      - 7000:7000
+      - 7001:7001
+      - 7002:7002
+      - 7003:7003
+      - 7004:7004
+      - 7005:7005
+    networks:
+      - default
   etcd:
       hostname: etcd
       image: bitnami/etcd:3
@@ -102,7 +121,7 @@ services:
         - "2379:2379"
         - "2380:2380"
         - "4001:4001"
-        - "7001:7001"
+        - "6001:7001"
       user: root
       volumes:
         - ${DATA_DIR}/etcd:/opt/bitnami/etcd/data
