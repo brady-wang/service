@@ -22,22 +22,22 @@ services:
 
 
 
-#  mysql:
-#    image: mysql:${MYSQL_VERSION}
-#    hostname: mysql
-#    container_name: docker-mysql
-#    restart: always
-#    volumes:
-#      - ${MYSQL_CONF_FILE}:/etc/my.cnf:rw
-#      - ${MYSQL_LOGS_FILE}/mysql:/logs:rw
-#      - ${DATA_DIR}/mysql:/var/lib/mysql:rw
-#    ports:
-#      - "${MYSQL_HOST_PORT}:3306"
-#    environment:
-#      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
-#      - "TZ=${TZ}"
-#    networks:
-#      - default
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    hostname: mysql
+    container_name: docker-mysql
+    restart: always
+    volumes:
+      - ${MYSQL_CONF_FILE}:/etc/my.cnf:rw
+      - ${MYSQL_LOGS_FILE}/mysql:/logs:rw
+      - ${DATA_DIR}/mysql:/var/lib/mysql:rw
+    ports:
+      - "${MYSQL_HOST_PORT}:3306"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+      - "TZ=${TZ}"
+    networks:
+      - default
 
 #  mongo:
 #    container_name: docker-mongo
