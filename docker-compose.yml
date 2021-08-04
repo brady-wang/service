@@ -22,22 +22,22 @@ services:
 
 
 
-  mysql:
-    image: mysql:${MYSQL_VERSION}
-    hostname: mysql
-    container_name: docker-mysql
-    restart: always
-    volumes:
-      - ${MYSQL_CONF_FILE}:/etc/my.cnf:rw
-      - ${MYSQL_LOGS_FILE}/mysql:/logs:rw
-      - ${DATA_DIR}/mysql:/var/lib/mysql:rw
-    ports:
-      - "${MYSQL_HOST_PORT}:3306"
-    environment:
-      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
-      - "TZ=${TZ}"
-    networks:
-      - default
+#  mysql:
+#    image: mysql:${MYSQL_VERSION}
+#    hostname: mysql
+#    container_name: docker-mysql
+#    restart: always
+#    volumes:
+#      - ${MYSQL_CONF_FILE}:/etc/my.cnf:rw
+#      - ${MYSQL_LOGS_FILE}/mysql:/logs:rw
+#      - ${DATA_DIR}/mysql:/var/lib/mysql:rw
+#    ports:
+#      - "${MYSQL_HOST_PORT}:3306"
+#    environment:
+#      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+#      - "TZ=${TZ}"
+#    networks:
+#      - default
 
 #  mongo:
 #    container_name: docker-mongo
@@ -80,38 +80,38 @@ services:
       - default
 
 
-  rabbitmq:
-    image: rabbitmq:${RABBITMQ_VERSION}
-    hostname: rabbitmq
-    container_name: docker-rabbitmq
-    restart: always
-    volumes:
-      - ${DATA_DIR}/rabbitmq:/var/lib/rabbitmq
-    ports:
-      - ${RABBITMQ_HOST_PORT_A}:5672
-      - ${RABBITMQ_HOST_PORT_B}:15672
-    environment:
-      - "RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}"
-      - "RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}"
-      - "RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}"
-    networks:
-      - default
+#  rabbitmq:
+#    image: rabbitmq:${RABBITMQ_VERSION}
+#    hostname: rabbitmq
+#    container_name: docker-rabbitmq
+#    restart: always
+#    volumes:
+#      - ${DATA_DIR}/rabbitmq:/var/lib/rabbitmq
+#    ports:
+#      - ${RABBITMQ_HOST_PORT_A}:5672
+#      - ${RABBITMQ_HOST_PORT_B}:15672
+#    environment:
+#      - "RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}"
+#      - "RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}"
+#      - "RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}"
+#    networks:
+#      - default
 
-  redis-cluster:
-    image: grokzen/redis-cluster:latest
-    hostname: docker-redis-cluster
-    restart: always
-    environment:
-      - "IP=0.0.0.0"
-    ports:
-      - 7000:7000
-      - 7001:7001
-      - 7002:7002
-      - 7003:7003
-      - 7004:7004
-      - 7005:7005
-    networks:
-      - default
+#  redis-cluster:
+#    image: grokzen/redis-cluster:latest
+#    hostname: docker-redis-cluster
+#    restart: always
+#    environment:
+#      - "IP=0.0.0.0"
+#    ports:
+#      - 7000:7000
+#      - 7001:7001
+#      - 7002:7002
+#      - 7003:7003
+#      - 7004:7004
+#      - 7005:7005
+#    networks:
+#      - default
   etcd:
       hostname: etcd
       image: bitnami/etcd:3
@@ -166,6 +166,7 @@ services:
       - "9092:9092"
     networks:
       - default
+
 networks:
   default:
     driver: bridge

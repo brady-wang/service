@@ -1,0 +1,74 @@
+version: '3.5'
+services:
+
+  rabbit1:
+    image: yeves/rabbitmq-cluster:latest
+    hostname: rabbit1
+    container_name: docker-rabbitmq-01
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=123456
+
+  rabbit2:
+    image: yeves/rabbitmq-cluster:latest
+    hostname: rabbit2
+    container_name: docker-rabbitmq-02
+    restart: always
+    links:
+      - rabbit1
+    environment:
+      - CLUSTERED=true
+      - CLUSTER_WITH=rabbit1
+      - RAM_NODE=true
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+
+  rabbit3:
+    image: yeves/rabbitmq-cluster:latest
+    hostname: rabbit3
+    container_name: docker-rabbitmq-03
+    restart: always
+    links:
+      - rabbit1
+      - rabbit2
+    environment:
+      - CLUSTERED=true
+      - CLUSTER_WITH=rabbit1
+    ports:
+      - "5674:5672"
+
+  rabbit4:
+    image: yeves/rabbitmq-cluster:latest
+    hostname: rabbit4
+    container_name: docker-rabbitmq-04
+    restart: always
+    links:
+      - rabbit1
+      - rabbit2
+      - rabbit3
+    environment:
+      - CLUSTERED=true
+      - CLUSTER_WITH=rabbit1
+    ports:
+      - "5675:5672"
+
+  rabbit5:
+    image: yeves/rabbitmq-cluster:latest
+    hostname: rabbit5
+    container_name: docker-rabbitmq-05
+    restart: always
+    links:
+      - rabbit1
+      - rabbit2
+      - rabbit3
+      - rabbit4
+    environment:
+      - CLUSTERED=true
+      - CLUSTER_WITH=rabbit1
+    ports:
+      - "5676:5672"
